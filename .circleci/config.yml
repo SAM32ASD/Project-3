@@ -191,7 +191,7 @@ jobs:
             cd .circleci/ansible
             cat inventory.txt
             aws ec2 describes-instances \
-            --query 'Reservations[*].Instances[*].[PublicIpAddress]' \
+            --query 'Reservations[*].Instances[*].PublicIpAddress' \
             --ouput text --filter Name-tag:Name,Values-backend-${CIRCLE_WORKFLOW_ID:0:7} >> inventory.txt
             cat inventory.txt
         
