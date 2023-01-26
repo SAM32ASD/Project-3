@@ -160,7 +160,7 @@ jobs:
       # Checkout code from git
       - checkout
       - run:
-          name: Ensure back-end infrastructure exists
+          name: install dependencies
           command: |
             yum install -y tar gzip
  
@@ -168,10 +168,11 @@ jobs:
           name: Ensure back-end infrastructure exist                       
           command: |   
             aws cloudformation deploy \
-                --template-file .circleci/files/backend.yml \
-                --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
-                --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"  \
-                --tags project=udapeople
+              --template-file .circleci/files/backend.yml \
+              --tags project=udapeople \
+              --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+              --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"  
+              
             
               
       - run:
@@ -179,16 +180,17 @@ jobs:
           command: |
             aws cloudformation deploy \
               --template-file .circleci/files/frontend.yml \
+              --tags project=udapeople \
               --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}" \
-              --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"  \
-              --tags project=udapeople
+              --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"  
+              
              
               
       - run:
           name: Add back-end ip to ansible inventory
           command: |
             # Your code here
-            cd .circleci/ansibles
+            cd .circleci/ansible
             cat inventory.txt
             aws ec2 describes-instances \
             --query 'Reservations[*].Instances[*].PublicIpAddress' \
