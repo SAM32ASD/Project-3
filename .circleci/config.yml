@@ -267,87 +267,87 @@ jobs:
       - destroy-environment
       - revert-migrations
 
-  # deploy-frontend:
-  #   docker:
-  #     - image: cimg/node:13.8.0
-  #   steps:
-  #     - checkout
-  #     - install_awscli
-  #     - restore_cache:
-  #         keys: [frontend-dependencies]
-  #     - run:
-  #         name: Install dependencies
-  #         command: |
-  #           cd frontend
-  #           npm install
-  #     - run:
-  #         name: Get backend url
-  #         command: |
-  #           BACKEND_PUBLIC_IP=$(aws ec2 describe-instances \
-  #           --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
-  #           --query 'Reservations[*].Instances[*].PublicIpAddress' \
-  #           --output text)
+  deploy-frontend:
+    docker:
+      - image: cimg/node:13.8.0
+    steps:
+      - checkout
+      - install_awscli
+      - restore_cache:
+          keys: [frontend-dependencies]
+      - run:
+          name: Install dependencies
+          command: |
+            cd frontend
+            npm install
+      - run:
+          name: Get backend url
+          command: |
+            BACKEND_PUBLIC_IP=$(aws ec2 describe-instances \
+            --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+            --query 'Reservations[*].Instances[*].PublicIpAddress' \
+            --output text)
 
-  #           echo "API_URL=http://${BACKEND_PUBLIC_IP}:3030" >> frontend/.env
-  #           cat frontend/.env
-  #     - run:
-  #         name: Deploy frontend objects
-  #         command: |
-  #           cd frontend
-  #           npm run build
-  #           aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7}  --recursive
+            echo "API_URL=http://${BACKEND_PUBLIC_IP}:3030" >> frontend/.env
+            cat frontend/.env
+      - run:
+          name: Deploy frontend objects
+          command: |
+            cd frontend
+            npm run build
+            aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7}  --recursive
 
-  #     - destroy-environment    
-  #     - revert-migrations
+      - destroy-environment    
+      - revert-migrations
 
-  # deploy-backend:
-  #   docker:
-  #     - image: cimg/base:stable
-  #   steps:
-  #     - checkout
-  #     - install_awscli
-  #     - install_ansible
-  #     - install_nodejs
-  #     - add_ssh_keys:
-  #         fingerprints: ["34:0d:60:21:db:cf:e7:76:e1:68:06:f5:61:4a:30:ed"]
+  deploy-backend:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - checkout
+      - install_awscli
+      - install_ansible
+      - install_nodejs
+      - add_ssh_keys:
+          fingerprints: ["2c:36:85:dc:24:e6:d1:28:00:46:37:3a:63:30:f3:6f"]
       
-  #     - attach_workspace:
-  #         at: ~/
+      - attach_workspace:
+          at: ~/
       
-  #     - restore_cache:
-  #         keys: [backend-dependencies]
+      - restore_cache:
+          keys: [backend-dependencies]
       
-  #     - run:
-  #         name: Install dependencies
-  #         command: |
-  #           cd backend
-  #           npm install 
+      - run:
+          name: Install dependencies
+          command: |
+            cd backend
+            npm install 
 
-  #     - run:
-  #         name: package backend
-  #         command: |
-  #           cd backend
-  #           npm run build
-  #           # Zip the directory
-  #           tar -czf artifact.tar.gz dist/* package*
+      - run:
+          name: package backend
+          command: |
+            cd backend
+            npm run build
+            # Zip the directory
+            tar -czf artifact.tar.gz dist/* package*
 
-  #           cd ..
-  #           cp backend/artifact.tar.gz .circleci/ansible/roles/deploy/files
+            cd ..
+            cp backend/artifact.tar.gz .circleci/ansible/roles/deploy/files
 
-  #     - run:
-  #         name: deploy backend
-  #         command: |
-  #           export TYPEORM_MIGRATIONS_DIR=./migrations
-  #           export TYPEORM_ENTITIES=./modules/domain/**/*.entity{.ts,.js}
-  #           export TYPEORM_MIGRATIONS=./migrations/*.ts
+      - run:
+          name: deploy backend
+          command: |
+            export TYPEORM_MIGRATIONS_DIR=./migrations
+            export TYPEORM_ENTITIES=./modules/domain/**/*.entity{.ts,.js}
+            export TYPEORM_MIGRATIONS=./migrations/*.ts
 
-  #           cd .circleci/ansible
-  #           echo "Contents  of the inventory.txt file is -------"
-  #           cat inventory.txt
-  #           ansible-playbook -i inventory.txt deploy-backend.yml
-  #     # Here's where you will add some code to rollback on failure  
-  #     - destroy-environment    
-  #     - revert-migrations
+            cd .circleci/ansible
+            echo "Contents  of the inventory.txt file is -------"
+            cat inventory.txt
+            ansible-playbook -i inventory.txt deploy-backend.yml
+      # Here's where you will add some code to rollback on failure  
+      - destroy-environment    
+      - revert-migrations
 
   
 
