@@ -444,14 +444,14 @@ jobs:
                 aws cloudformation delete-stack --stack-name "udapeople-frontend-${OldWorkflowID}"
               fi
               
-  succss_notification:
-    docker:
-      - image: cimg/base:stable        
-    steps:
-      - slack/notify:
-          event: pass
-          channel: udapeople-alerting
-          template: success_tagged_deploy_1
+  # success_notification:
+  #   docker:
+  #     - image: cimg/base:stable        
+  #   steps:
+  #     - slack/notify:
+  #         event: pass
+  #         channel: udapeople-alerting
+  #         template: success_tagged_deploy_1
 
 workflows:
   Give Your Application Auto-deploy Superpowers:
@@ -485,8 +485,8 @@ workflows:
           requires: [smoke-test]
       - cleanup:
           requires: [cloudfront-update]
-      - succss_notification:
-          requires: [cleanup]
+      # - success_notification:
+      #     requires: [cleanup]
 
 
 
