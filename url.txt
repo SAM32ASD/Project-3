@@ -1,5 +1,5 @@
 [URL01]
-https://github.com/salahbeeh/udapeople
+https://github.com/SAM32ASD/project-3
 
 [URL02]
 http://udapeople-0a3de57.s3-website-us-east-1.amazonaws.com
@@ -8,8 +8,8 @@ http://udapeople-0a3de57.s3-website-us-east-1.amazonaws.com
 https://d1l9dk15ka563.cloudfront.net
 
 [URL04]
-http://34.207.34.196:3030/api/status
+http://34.234.55.53:3030/api/status
 
 [URL05]
-44.203.117.70:9090
+44.202.68.136:9090
 
