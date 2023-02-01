@@ -2,14 +2,14 @@
 https://github.com/SAM32ASD/project-3
 
 [URL02]
-http://udapeople-0a3de57.s3-website-us-east-1.amazonaws.com
+http://udapeople-1d62d84.s3-website-us-east-1.amazonaws.com
 
 [URL03]
 https://d1l9dk15ka563.cloudfront.net
 
 [URL04]
-http://34.234.55.53:3030/api/status
+http://3.234.42.160:3030/api/status
 
 [URL05]
-44.202.68.136:9090
+54.224.33.72:9090
 
