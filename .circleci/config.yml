@@ -2,7 +2,7 @@ version: 2.1
 
 orbs:
   
-  slack: circleci/slack@4.10.1
+  slack: circleci/slack@4.12.1
 
 commands:
 
@@ -66,7 +66,7 @@ commands:
           when: on_fail 
           command: |
           
-            SUCCESS=$(curl --insecure https://kvdb.io/HHhbxK1wdJd3g2eSLJVywm/migration_<< parameters.workflow_ID >>)
+            SUCCESS=$(curl --insecure https:/HHhbxK1wdJd3g2eSLJVywm/kvdb.io//migration_<< parameters.workflow_ID >>)
             if(( $SUCCESS==1 )); 
             then
               cd ~/project/backend
@@ -230,7 +230,7 @@ jobs:
       - install_awscli
       - install_ansible
       - add_ssh_keys:
-          fingerprints: ["d9:47:02:54:f2:ef:2e:82:c5:d6:e5:34:7e:f1:31:6e"]
+          fingerprints: ["2c:36:85:dc:24:e6:d1:28:00:46:37:3a:63:30:f3:6f"]
       
       - attach_workspace:
           at: ~/
@@ -309,7 +309,7 @@ jobs:
       - install_ansible
       - install_nodejs
       - add_ssh_keys:
-          fingerprints: ["d9:47:02:54:f2:ef:2e:82:c5:d6:e5:34:7e:f1:31:6e"]
+          fingerprints: ["2c:36:85:dc:24:e6:d1:28:00:46:37:3a:63:30:f3:6f"]
       
       - attach_workspace:
           at: ~/
@@ -345,7 +345,7 @@ jobs:
             echo "Contents  of the inventory.txt file is -------"
             cat inventory.txt
             ansible-playbook -i inventory.txt deploy-backend.yml
-      # Here's where you will add some code to rollback on failure  
+      # Here's where you will add some code to rollback on failure  of  cloudfront
       - destroy-environment    
       - revert-migrations
 
@@ -444,7 +444,7 @@ jobs:
                 aws cloudformation delete-stack --stack-name "udapeople-frontend-${OldWorkflowID}"
               fi
               
-  succss_notification:
+  success_notification:
     docker:
       - image: cimg/base:stable        
     steps:
@@ -483,10 +483,10 @@ workflows:
           requires: [deploy-backend, deploy-frontend]
       - cloudfront-update:
           requires: [smoke-test]
-      # - cleanup:
-      #     requires: [cloudfront-update]
-      # - succss_notification:
-      #     requires: [cleanup]
+      - cleanup:
+          requires: [cloudfront-update]
+      - success_notification:
+          requires: [cleanup]
 
 
 
